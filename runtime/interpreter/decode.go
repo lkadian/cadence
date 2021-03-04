@@ -507,6 +507,9 @@ func (d *Decoder) decodeLocation(l interface{}) (common.Location, error) {
 	case cborTagIdentifierLocation:
 		return d.decodeIdentifierLocation(content)
 
+	case cborTagNativeLocation:
+		return d.decodeNativeLocation(content)
+
 	default:
 		return nil, fmt.Errorf("invalid location encoding tag: %d", tag.Number)
 	}
@@ -578,6 +581,15 @@ func (d *Decoder) decodeAddressLocation(v interface{}) (common.Location, error) 
 		Address: common.BytesToAddress(encodedAddress),
 		Name:    name,
 	}, nil
+}
+
+func (d *Decoder) decodeNativeLocation(v interface{}) (common.Location, error) {
+	_, ok := v.(map[interface{}]interface{})
+	if !ok {
+		return nil, fmt.Errorf("invalid address location encoding: %T", v)
+	}
+
+	return common.NativeLocation{}, nil
 }
 
 func (d *Decoder) decodeComposite(v interface{}, path []string) (*CompositeValue, error) {

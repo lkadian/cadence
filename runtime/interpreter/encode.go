@@ -142,7 +142,7 @@ const (
 	cborTagAddressLocation
 	cborTagStringLocation
 	cborTagIdentifierLocation
-	_
+	cborTagNativeLocation
 	_
 	_
 	_
@@ -911,6 +911,12 @@ func (e *Encoder) prepareLocation(l common.Location) (interface{}, error) {
 		return cbor.Tag{
 			Number:  cborTagAddressLocation,
 			Content: content,
+		}, nil
+
+	case common.NativeLocation:
+		return cbor.Tag{
+			Number:  cborTagNativeLocation,
+			Content: cborMap{},
 		}, nil
 
 	default:
